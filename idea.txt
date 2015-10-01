@@ -1,0 +1,7 @@
+Interactive fluid simulator
+
+User controls a vector that sets the velocity of the fluid flow.
+(Allow controls for viscosity etc. too?)
+
+User can pick/manipulate (draw?) geometric objects in the center of
+the frame

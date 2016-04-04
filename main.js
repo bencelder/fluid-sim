@@ -41,6 +41,7 @@ function loop(){
 
     // draw everything
     draw();
+    asdfasdf;
 
 }
 

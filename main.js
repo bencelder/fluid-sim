@@ -19,7 +19,8 @@ function initialize(){
 
     dvx = diff_2D(vx, 1, 1);
     dvy = diff_2D(vy, 1, 1);
-
+    ddvx = diff_2D(vx, 1, 2);
+    ddvy = diff_2D(vy, 1, 2);
 
     lastframe = Date.now();
     //sim_loop = setInterval( function(){loop()}, 1);

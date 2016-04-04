@@ -1,19 +1,24 @@
 function initialize(){
-    c = document.getElementById("myCanvas");
+    c = document.getElementById("canvas");
     ctx = c.getContext("2d");
     c.style.cursor = "none";
+
+    c.width = document.documentElement.clientWidth;;
+    c.height = document.documentElement.clientHeight;;
 
     keys = [];
 
     paused = -1;
 
-    // init vx and vy
-    rows = 5;
-    columns = rows;
+    rows = 100;
+    columns = rows * c.width / c.height;
 
-    vx = [];
-    vy = [];
+    console.log(columns);
 
+    lastframe = Date.now();
+    sim_loop = setInterval( function(){loop()}, 1);
+    /*
+    // initialize velocity and derivs
     vx = init_2D(rows, columns, 0);
     vy = init_2D(rows, columns, 0);
 
@@ -22,8 +27,7 @@ function initialize(){
     ddvx = diff_2D(vx, 1, 2);
     ddvy = diff_2D(vy, 1, 2);
 
-    lastframe = Date.now();
-    //sim_loop = setInterval( function(){loop()}, 1);
+    */
 }
 
 function loop(){
@@ -41,7 +45,6 @@ function loop(){
 
     // draw everything
     draw();
-    asdfasdf;
 
 }
 
@@ -149,4 +152,9 @@ function keyUp(e){
 function mouseMove(e){
     //cursor.x = e.clientX - c.offsetLeft;
     //cursor.y = e.clientY - c.offsetTop;
+}
+
+function resize(e){
+    c.width = document.documentElement.clientWidth;;
+    c.height = document.documentElement.clientHeight;;
 }

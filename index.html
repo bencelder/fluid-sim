@@ -2,6 +2,7 @@
 <html>
     <head>
         <title>fluid simulator</title>
+        <link rel="stylesheet" type="text/css" href="style.css">
         <script type="text/javascript" src="vector.js">
         </script>
         <script type="text/javascript" src="main.js">
@@ -12,10 +13,10 @@
         onkeydown="keyDown(event);"
         onkeyup="keyUp(event);"
         onmousemove="mouseMove(event);"
+        onresize="resize();"
         style="background-color:#444444">
         <center>
-            <canvas id="myCanvas" height="700px" width="700px"
-            style="background-color#444444">
+            <canvas id="canvas">
             </canvas>
         </center>
     </body>

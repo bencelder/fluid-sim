@@ -1,7 +1,7 @@
 function initialize(){
     c = document.getElementById("canvas");
     ctx = c.getContext("2d");
-    c.style.cursor = "none";
+    //c.style.cursor = "none";
 
     c.width = document.documentElement.clientWidth;;
     c.height = document.documentElement.clientHeight;;
@@ -10,24 +10,25 @@ function initialize(){
 
     paused = -1;
 
-    rows = 100;
+    rows = 60;
     columns = rows * c.width / c.height;
 
     console.log(columns);
 
-    lastframe = Date.now();
-    sim_loop = setInterval( function(){loop()}, 1);
-    /*
     // initialize velocity and derivs
     vx = init_2D(rows, columns, 0);
     vy = init_2D(rows, columns, 0);
 
+    /*
     dvx = diff_2D(vx, 1, 1);
     dvy = diff_2D(vy, 1, 1);
     ddvx = diff_2D(vx, 1, 2);
     ddvy = diff_2D(vy, 1, 2);
-
     */
+
+    lastframe = Date.now();
+    sim_loop = setInterval( function(){loop()}, 1000);
+
 }
 
 function loop(){
@@ -130,9 +131,26 @@ function diff(f, dx, n){
 
 
 function draw(){
-    //ctx.fillStyle = "#002447";
-    ctx.fillStyle = "#FFFFFF";
+    ctx.clearRect(0, 0, c.width, c.height);
+    ctx.fillStyle = "#000000";
     ctx.fillRect(0, 0, c.width, c.height);
+
+    // draw the grid
+    ctx.strokeStyle = "rgba(255, 255, 255, 0.2)";
+    ctx.lineWidth = 1;
+    ctx.beginPath();
+    for (var i = .5; i <= c.width; i += c.width / columns){
+        ctx.moveTo(i, 0);
+        ctx.lineTo(i, c.height);
+
+        if (i <= c.height){
+            ctx.moveTo(0, i);
+            ctx.lineTo(c.width, i);
+        }
+    }
+    ctx.closePath();
+    ctx.stroke();
+
 }
 
 

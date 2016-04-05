@@ -10,24 +10,22 @@ function initialize(){
 
     paused = -1;
 
-    rows = 60;
-    columns = rows * c.width / c.height;
-
-    console.log(columns);
+    rows = 200;
+    columns = Math.floor(rows * c.width / c.height);
 
     // initialize velocity and derivs
     vx = init_2D(rows, columns, 0);
     vy = init_2D(rows, columns, 0);
 
-    /*
+    vx[30][30] = 1;
+
     dvx = diff_2D(vx, 1, 1);
     dvy = diff_2D(vy, 1, 1);
     ddvx = diff_2D(vx, 1, 2);
     ddvy = diff_2D(vy, 1, 2);
-    */
 
     lastframe = Date.now();
-    sim_loop = setInterval( function(){loop()}, 1000);
+    sim_loop = setInterval( function(){loop()}, 1);
 
 }
 
@@ -42,11 +40,46 @@ function loop(){
         return;
     }
 
-    // compute derivatives
+    for (var i = 0; i < 8; i++)
+        step_v(dt/8);
+
+
+    //console.log(dvx.dx[30][29]);
+
+    // BCs
+    vx[30][30] = 5;
+    vy[30][30] = 5;
 
     // draw everything
     draw();
 
+}
+
+function step_v(dt){
+    // compute derivatives
+    dvx = diff_2D(vx, 1, 1);
+    dvy = diff_2D(vy, 1, 1);
+    ddvx = diff_2D(vx, 1, 2);
+    ddvy = diff_2D(vy, 1, 2);
+
+    // update the velocities
+    nu = .1;
+
+    for (var i = 0; i < rows; i++){
+        for (var j = 0; j < columns; j++){
+            vx_t = vx[i][j];
+            vy_t = vy[i][j];
+
+            vx[i][j] += dt * (
+                    nu * (ddvx.dx[i][j] + ddvx.dy[i][j])
+                    - (vx_t*dvx.dx[i][j] + vy_t*dvx.dy[i][j])
+                    );
+            vy[i][j] += dt * (
+                    nu * (ddvy.dx[i][j] + ddvy.dy[i][j])
+                    - (vx_t * dvy.dx[i][j] + vy_t * dvy.dy[i][j])
+                    );
+        }
+    }
 }
 
 function print_2D(a){
@@ -75,7 +108,7 @@ function diff_2D(f, dx, n){
 
         dtemp = diff(temp, dx, n);
 
-        for (var i = 0; i < cols; i++)
+        for (var i = 0; i < rows; i++)
             df.dy[i][j] = dtemp[i];
     }
     return df;
@@ -135,11 +168,14 @@ function draw(){
     ctx.fillStyle = "#000000";
     ctx.fillRect(0, 0, c.width, c.height);
 
+    var dp = Math.floor(c.width / columns);
+
     // draw the grid
+    /*
     ctx.strokeStyle = "rgba(255, 255, 255, 0.2)";
     ctx.lineWidth = 1;
     ctx.beginPath();
-    for (var i = .5; i <= c.width; i += c.width / columns){
+    for (var i = .5; i <= c.width; i += dp){
         ctx.moveTo(i, 0);
         ctx.lineTo(i, c.height);
 
@@ -150,6 +186,17 @@ function draw(){
     }
     ctx.closePath();
     ctx.stroke();
+    */
+
+    //v = init_2D(rows, columns, 0);
+    for (var i = 0; i < rows; i++){
+        for (var j = 0; j < columns; j++){
+            v = Math.sqrt(vx[i][j]*vx[i][j] + vy[i][j]*vy[i][j]);
+            //ctx.fillStyle = "rgba(255, 255, 255," + vx[i][j] + ")";
+            ctx.fillStyle = "rgba(255, 255, 255," + v + ")";
+            ctx.fillRect(dp*i, dp*j, dp, dp);
+        }
+    }
 
 }
 
